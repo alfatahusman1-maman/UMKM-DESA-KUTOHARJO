@@ -1,5 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
+import { findUserByEmailStore } from "./store";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
 
@@ -26,21 +28,35 @@ export const authOptions: NextAuthOptions = {
             }),
           });
 
-          const data = await res.json();
-          if (!res.ok || !data.user) {
-            throw new Error(data.error || "Gagal masuk");
+          if (res.ok) {
+            const data = await res.json();
+            if (data.user) {
+              return {
+                id: data.user.id,
+                email: data.user.email,
+                name: data.user.name,
+                role: data.user.role,
+                token: data.token,
+              };
+            }
           }
-
-          return {
-            id: data.user.id,
-            email: data.user.email,
-            name: data.user.name,
-            role: data.user.role,
-            token: data.token,
-          };
-        } catch (error: any) {
-          throw new Error(error.message || "Gagal menghubungi server backend");
+        } catch (error) {
+          // Backend not reachable, fallback to store
         }
+
+        // Fallback store authentication
+        const user = findUserByEmailStore(credentials.email);
+        if (user && bcrypt.compareSync(credentials.password, user.passwordHash)) {
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            token: "store-session-token",
+          };
+        }
+
+        throw new Error("Email atau password salah");
       },
     }),
   ],

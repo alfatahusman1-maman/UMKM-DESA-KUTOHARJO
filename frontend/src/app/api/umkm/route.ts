@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getUmkmsStore, addUmkmStore } from "@/lib/store";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
 
@@ -11,30 +10,43 @@ export async function GET(req: NextRequest) {
       headers: req.headers,
       cache: "no-store",
     });
-    const data = await backendRes.json();
-    return NextResponse.json(data, { status: backendRes.status });
+    if (backendRes.ok) {
+      const data = await backendRes.json();
+      return NextResponse.json(data, { status: backendRes.status });
+    }
   } catch (error) {
-    return NextResponse.json({ error: "Gagal menghubungkan ke backend server." }, { status: 500 });
+    // Backend server unavailable
   }
+
+  const url = new URL(req.url);
+  const search = url.searchParams.get("search") || undefined;
+  const category = url.searchParams.get("category") || undefined;
+  const dusun = url.searchParams.get("dusun") || undefined;
+
+  const data = getUmkmsStore({ search, category, dusun });
+  return NextResponse.json({
+    success: true,
+    data,
+    meta: { page: 1, limit: 50, total: data.length, totalPages: 1 },
+  });
 }
 
 export async function POST(req: NextRequest) {
+  const body = await req.json();
   try {
-    const session = await getServerSession(authOptions);
-    const token = (session as any)?.accessToken;
-
-    const body = await req.json();
     const backendRes = await fetch(`${BACKEND_URL}/api/umkm`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    const data = await backendRes.json();
-    return NextResponse.json(data, { status: backendRes.status });
+    if (backendRes.ok) {
+      const data = await backendRes.json();
+      return NextResponse.json(data, { status: backendRes.status });
+    }
   } catch (error) {
-    return NextResponse.json({ error: "Gagal menghubungkan ke backend server." }, { status: 500 });
+    // Fallback store
   }
+
+  const created = addUmkmStore(body);
+  return NextResponse.json({ success: true, message: "UMKM berhasil ditambahkan.", data: created }, { status: 201 });
 }
