@@ -74,82 +74,14 @@ if (!globalStore.__categories) {
   ];
 }
 
+// Kosongkan data UMKM bawaan untuk testing manual
 if (!globalStore.__umkms) {
-  globalStore.__umkms = [
-    {
-      id: "umkm-1",
-      categoryId: "cat-1",
-      category_id: "cat-1",
-      name: "Kopi Bubuk Robusta Kutoharjo",
-      slug: "kopi-bubuk-robusta-kutoharjo",
-      ownerName: "Pak Maman",
-      owner_name: "Pak Maman",
-      description: "Kopi olahan khas Desa Kutoharjo dipetik dari kebun sendiri dan disangrai dengan cara tradisional untuk menjaga aroma cita rasa terbaik.",
-      address: "Jl. Raya Kutoharjo No. 12",
-      dusun: "Kutoharjo Tengah",
-      operationalHours: "Senin - Sabtu (08.00 - 17.00 WIB)",
-      operational_hours: "Senin - Sabtu (08.00 - 17.00 WIB)",
-      whatsappNumber: "6281234567890",
-      whatsapp_number: "6281234567890",
-      mapsUrl: "https://maps.google.com/?q=-6.9,110.2",
-      maps_url: "https://maps.google.com/?q=-6.9,110.2",
-      instagramUrl: "https://instagram.com/kopikutoharjo",
-      instagram_url: "https://instagram.com/kopikutoharjo",
-      imageUrl: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=800",
-      image_url: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=800",
-      isVerified: true,
-      is_verified: true,
-    },
-    {
-      id: "umkm-2",
-      categoryId: "cat-2",
-      category_id: "cat-2",
-      name: "Kerajinan Anom Kriya Batik",
-      slug: "kerajinan-anom-kriya-batik",
-      ownerName: "Ibu Nurhayati",
-      owner_name: "Ibu Nurhayati",
-      description: "Sentra kerajinan batik tulis bermotif lokal Kutoharjo. Melayani pemesanan kain batik custom untuk seragam kantor dan acara keluarga.",
-      address: "RT 03 RW 02 Dusun Kutoharjo Barat",
-      dusun: "Kutoharjo Barat",
-      operationalHours: "Setiap Hari (09.00 - 20.00 WIB)",
-      operational_hours: "Setiap Hari (09.00 - 20.00 WIB)",
-      whatsappNumber: "6285712345678",
-      whatsapp_number: "6285712345678",
-      mapsUrl: "https://maps.google.com/?q=-6.91,110.21",
-      maps_url: "https://maps.google.com/?q=-6.91,110.21",
-      instagramUrl: "",
-      instagram_url: "",
-      imageUrl: "https://images.unsplash.com/photo-1606722590583-6951b5ea92ad?w=800",
-      image_url: "https://images.unsplash.com/photo-1606722590583-6951b5ea92ad?w=800",
-      isVerified: true,
-      is_verified: true,
-    },
-  ];
+  globalStore.__umkms = [];
 }
 
+// Kosongkan data Produk bawaan untuk testing manual
 if (!globalStore.__products) {
-  globalStore.__products = [
-    {
-      id: "prod-1",
-      umkmId: "umkm-1",
-      umkm_id: "umkm-1",
-      title: "Kopi Robusta Premium 250gr",
-      price: 35000,
-      description: "Biji kopi pilihan roasted medium dark.",
-      imageUrl: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=500",
-      image_url: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=500",
-    },
-    {
-      id: "prod-2",
-      umkmId: "umkm-2",
-      umkm_id: "umkm-2",
-      title: "Kain Batik Tulis Motif Kutoharjo",
-      price: 250000,
-      description: "Kain katun primissima 2x1.15 meter batik tulis halus.",
-      imageUrl: "https://images.unsplash.com/photo-1606722590583-6951b5ea92ad?w=500",
-      image_url: "https://images.unsplash.com/photo-1606722590583-6951b5ea92ad?w=500",
-    },
-  ];
+  globalStore.__products = [];
 }
 
 if (!globalStore.__users) {
