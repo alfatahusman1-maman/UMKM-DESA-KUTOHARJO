@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  /* Neumorphic "extruded" surface — cards, buttons at rest */
+  .neumorphic-flat {
+    background-color: #f7f9fc;
+    box-shadow:
+      -4px -4px 10px rgba(255, 255, 255, 0.9),
+      4px 4px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Neumorphic "inset" surface — inputs, active/pressed states */
+  .neumorphic-pressed {
+    background-color: #f7f9fc;
+    box-shadow:
+      inset -3px -3px 8px rgba(255, 255, 255, 0.9),
+      inset 3px 3px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Glassmorphic header/nav */
+  .glass-header {
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 24px rgba(186, 3, 46, 0.25);
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+body {
+  background-color: #f7f9fc;
+  color: #191c1e;
+}
