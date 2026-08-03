@@ -61,6 +61,7 @@ const globalStore = globalThis as unknown as {
   __umkms?: UmkmData[];
   __products?: ProductData[];
   __users?: UserData[];
+  __settings?: Record<string, string>;
 };
 
 if (!globalStore.__categories) {
@@ -168,6 +169,14 @@ if (!globalStore.__users) {
       role: "ADMIN",
     },
   ];
+}
+
+if (!globalStore.__settings) {
+  globalStore.__settings = {
+    site_name: "Kutoharjo UMKM Hub",
+    hero_title: "Temukan & Dukung UMKM Lokal Desa Kutoharjo",
+    hero_subtitle: "Direktori digital yang menghubungkan Anda langsung dengan pelaku usaha mikro, kecil, dan menengah di Desa Kutoharjo.",
+  };
 }
 
 export function getCategoriesStore() {
@@ -280,6 +289,16 @@ export function deleteUmkmStore(slug: string) {
   return true;
 }
 
+export function verifyUmkmStore(id: string, isVerified: boolean) {
+  const umkm = (globalStore.__umkms || []).find((u) => u.id === id || u.slug === id);
+  if (umkm) {
+    umkm.isVerified = isVerified;
+    umkm.is_verified = isVerified;
+    return true;
+  }
+  return false;
+}
+
 export function addProductStore(data: Partial<ProductData>) {
   const newProduct: ProductData = {
     id: `prod-${Date.now()}`,
@@ -304,4 +323,43 @@ export function deleteProductStore(id: string) {
 
 export function findUserByEmailStore(email: string) {
   return (globalStore.__users || []).find((u) => u.email.toLowerCase() === email.toLowerCase());
+}
+
+export function updateUserStore(idOrEmail: string, data: { name?: string; password?: string }) {
+  const user = (globalStore.__users || []).find((u) => u.id === idOrEmail || u.email.toLowerCase() === idOrEmail.toLowerCase());
+  if (!user) return null;
+  if (data.name) user.name = data.name;
+  if (data.password) user.passwordHash = bcrypt.hashSync(data.password, 10);
+  return { id: user.id, name: user.name, email: user.email, role: user.role };
+}
+
+export function getSiteSettingsStore() {
+  return globalStore.__settings || {};
+}
+
+export function updateSiteSettingsStore(data: Record<string, string>) {
+  globalStore.__settings = { ...globalStore.__settings, ...data };
+  return globalStore.__settings;
+}
+
+export function getAdminsStore() {
+  return (globalStore.__users || []).filter((u) => u.role === "ADMIN");
+}
+
+export function createAdminStore(data: { name: string; email: string; password?: string }) {
+  const newAdmin: UserData = {
+    id: `usr-${Date.now()}`,
+    name: data.name,
+    email: data.email,
+    passwordHash: bcrypt.hashSync(data.password || "admin123", 10),
+    role: "ADMIN",
+  };
+  globalStore.__users = [newAdmin, ...(globalStore.__users || [])];
+  return { id: newAdmin.id, name: newAdmin.name, email: newAdmin.email, role: newAdmin.role };
+}
+
+export function deleteUserStore(id: string) {
+  const initialLength = (globalStore.__users || []).length;
+  globalStore.__users = (globalStore.__users || []).filter((u) => u.id !== id);
+  return (globalStore.__users || []).length < initialLength;
 }

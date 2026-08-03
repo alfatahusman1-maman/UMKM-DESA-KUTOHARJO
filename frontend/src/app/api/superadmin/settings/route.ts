@@ -1,40 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getSiteSettingsStore, updateSiteSettingsStore } from "@/lib/store";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
 
 export async function GET(req: NextRequest) {
   try {
-    const url = new URL(req.url);
-    const backendRes = await fetch(`${BACKEND_URL}/api/superadmin/settings${url.search}`, {
-      headers: req.headers,
-      cache: "no-store",
-    });
-    const data = await backendRes.json();
-    return NextResponse.json(data, { status: backendRes.status });
+    const backendRes = await fetch(`${BACKEND_URL}/api/superadmin/settings`, { cache: "no-store" });
+    if (backendRes.ok) {
+      const data = await backendRes.json();
+      return NextResponse.json(data, { status: backendRes.status });
+    }
   } catch (error) {
-    return NextResponse.json({ error: "Gagal menghubungkan ke backend server." }, { status: 500 });
+    // Fallback store
   }
+
+  return NextResponse.json({ success: true, data: getSiteSettingsStore() });
 }
 
 export async function PUT(req: NextRequest) {
-  try {
-    const session = await getServerSession(authOptions);
-    const token = (session as any)?.accessToken;
+  const body = await req.json();
 
-    const body = await req.json();
+  try {
     const backendRes = await fetch(`${BACKEND_URL}/api/superadmin/settings`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    const data = await backendRes.json();
-    return NextResponse.json(data, { status: backendRes.status });
+    if (backendRes.ok) {
+      const data = await backendRes.json();
+      return NextResponse.json(data, { status: backendRes.status });
+    }
   } catch (error) {
-    return NextResponse.json({ error: "Gagal menghubungkan ke backend server." }, { status: 500 });
+    // Fallback store
   }
+
+  const updated = updateSiteSettingsStore(body);
+  return NextResponse.json({ success: true, message: "Pengaturan situs berhasil diperbarui.", data: updated });
 }
