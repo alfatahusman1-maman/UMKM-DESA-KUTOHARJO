@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope, Hanken_Grotesk } from "next/font/google";
 import "./globals.css";
+import { Providers } from "@/components/Providers";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -29,7 +30,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
         />
       </head>
-      <body className="font-body-md antialiased bg-slate-50/50 text-slate-900">{children}</body>
+      <body className="font-body-md antialiased bg-slate-50/50 text-slate-900">
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

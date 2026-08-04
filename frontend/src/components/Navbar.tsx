@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 
-const NAV_LINKS = [
+const BASE_NAV_LINKS = [
   { label: "Beranda", href: "/" },
   { label: "Daftar UMKM", href: "/umkm" },
-  { label: "Peta Desa", href: "/peta" },
   { label: "Tentang Kami", href: "/tentang" },
   { label: "Kontak", href: "/kontak" },
 ];
@@ -15,12 +15,23 @@ const NAV_LINKS = [
 export default function Navbar({ title = "Portal UMKM Kutoharjo", logo }: { title?: string; logo?: string }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { data: session } = useSession();
+
+  const brandHref = session ? "/dashboard" : "/login";
+  
+  const navLinks = session
+    ? [...BASE_NAV_LINKS, { label: "Dashboard Admin", href: "/dashboard" }]
+    : BASE_NAV_LINKS;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-white/80 backdrop-blur-md transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Brand Logo & Name */}
-        <Link href="/" className="flex items-center gap-2.5 group">
+        {/* Brand Logo & Name -> Links to Admin/Super Admin Login */}
+        <Link
+          href={brandHref}
+          className="flex items-center gap-2.5 group cursor-pointer"
+          title={session ? "Dashboard Admin / Super Admin" : "Login Admin / Super Admin"}
+        >
           {logo ? (
             <img src={logo} alt={title} className="w-9 h-9 rounded-md object-cover border border-slate-200 bg-white" />
           ) : (
@@ -35,7 +46,7 @@ export default function Navbar({ title = "Portal UMKM Kutoharjo", logo }: { titl
 
         {/* Desktop Navigation Links */}
         <nav className="hidden md:flex items-center gap-1">
-          {NAV_LINKS.map((link) => {
+          {navLinks.map((link) => {
             const isActive = pathname === link.href;
             return (
               <Link
@@ -68,7 +79,7 @@ export default function Navbar({ title = "Portal UMKM Kutoharjo", logo }: { titl
       {/* Mobile Drawer */}
       {open && (
         <div className="md:hidden border-b border-slate-200 bg-white px-4 py-3 space-y-1 animate-in slide-in-from-top-2">
-          {NAV_LINKS.map((link) => {
+          {navLinks.map((link) => {
             const isActive = pathname === link.href;
             return (
               <Link

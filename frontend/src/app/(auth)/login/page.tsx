@@ -2,8 +2,16 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import LoginForm from "@/components/LoginForm";
 import { fetchSiteSettings } from "@/lib/api";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function LoginPage() {
+  const session = await getServerSession(authOptions);
+  if (session) {
+    redirect("/dashboard");
+  }
+
   const settings = await fetchSiteSettings();
 
   const navbarTitle = settings.navbar_title || "Kutoharjo Hub";

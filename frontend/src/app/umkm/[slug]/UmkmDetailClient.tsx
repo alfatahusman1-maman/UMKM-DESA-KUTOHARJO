@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Umkm, Review } from "@/lib/types";
-import GoogleMapEmbed from "@/components/GoogleMapEmbed";
 import { buildWhatsAppLink, formatRupiah } from "@/lib/utils";
 import { submitReview } from "@/lib/api";
 
@@ -133,15 +132,6 @@ export default function UmkmDetailClient({ umkm, settings }: Props) {
             <p className="text-xs text-slate-600 pl-5">{umkm.operationalHours}</p>
           </div>
         )}
-
-        {/* Peta Lokasi Google Maps */}
-        <div className="bg-white border border-slate-200 rounded-lg p-5 shadow-2xs space-y-3">
-          <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1.5 tracking-tight">
-            <span className="material-symbols-outlined text-slate-700 text-[18px]">location_on</span>
-            <span>Peta Lokasi Usaha</span>
-          </h3>
-          <GoogleMapEmbed mapsUrl={umkm.mapsUrl} address={umkm.address} name={umkm.name} height="340px" />
-        </div>
 
         {/* Galeri Produk */}
         {umkm.products && umkm.products.length > 0 && (
