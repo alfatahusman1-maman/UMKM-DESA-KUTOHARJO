@@ -52,7 +52,6 @@ export default function Footer({
               <li><Link href="/syarat" className="hover:text-white transition-colors flex items-center gap-1.5"><span className="material-symbols-outlined text-[14px]">gavel</span> Syarat &amp; Ketentuan</Link></li>
               <li><Link href="/privasi" className="hover:text-white transition-colors flex items-center gap-1.5"><span className="material-symbols-outlined text-[14px]">shield</span> Kebijakan Privasi</Link></li>
               <li><Link href="/bantuan" className="hover:text-white transition-colors flex items-center gap-1.5"><span className="material-symbols-outlined text-[14px]">help</span> Pusat Bantuan</Link></li>
-              <li><Link href="/login" className="hover:text-white transition-colors flex items-center gap-1.5"><span className="material-symbols-outlined text-[14px]">admin_panel_settings</span> Portal Login Admin</Link></li>
             </ul>
           </div>
         </div>
