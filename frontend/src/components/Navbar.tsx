@@ -7,11 +7,12 @@ import { usePathname } from "next/navigation";
 const NAV_LINKS = [
   { label: "Beranda", href: "/" },
   { label: "Daftar UMKM", href: "/umkm" },
+  { label: "Peta Desa", href: "/peta" },
   { label: "Tentang Kami", href: "/tentang" },
   { label: "Kontak", href: "/kontak" },
 ];
 
-export default function Navbar({ title = "Kutoharjo Hub", logo }: { title?: string; logo?: string }) {
+export default function Navbar({ title = "Portal UMKM Korowelang", logo }: { title?: string; logo?: string }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -19,7 +20,7 @@ export default function Navbar({ title = "Kutoharjo Hub", logo }: { title?: stri
     <header className="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-white/80 backdrop-blur-md transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand Logo & Name */}
-        <Link href="/login" className="flex items-center gap-2.5 group">
+        <Link href="/" className="flex items-center gap-2.5 group">
           {logo ? (
             <img src={logo} alt={title} className="w-9 h-9 rounded-md object-cover border border-slate-200 bg-white" />
           ) : (
@@ -51,8 +52,6 @@ export default function Navbar({ title = "Kutoharjo Hub", logo }: { title?: stri
             );
           })}
         </nav>
-
-
 
         {/* Mobile Toggle Button */}
         <button
@@ -86,7 +85,6 @@ export default function Navbar({ title = "Kutoharjo Hub", logo }: { title?: stri
               </Link>
             );
           })}
-
         </div>
       )}
     </header>

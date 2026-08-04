@@ -6,6 +6,13 @@
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm run dev",
     "db:init": "cd backend && npm run db:init",
-    "build": "cd frontend && npm run build"
+    "build": "cd frontend && npm run build",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd frontend && npm test",
+    "test:e2e": "npx playwright test",
+    "test:all": "npm run test:backend && npm run test:frontend"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1"
   }
 }

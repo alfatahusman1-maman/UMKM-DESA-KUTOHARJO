@@ -13,8 +13,8 @@ function getInitialData() {
     users: [
       {
         id: "usr-superadmin",
-        name: "Super Admin Desa",
-        email: "superadmin@kutoharjo.desa.id",
+        name: "Super Admin Desa Korowelang",
+        email: "superadmin@korowelangkulon.desa.id",
         password_hash: superAdminPassword,
         role: "SUPERADMIN",
         created_at: new Date().toISOString(),
@@ -22,6 +22,22 @@ function getInitialData() {
       {
         id: "usr-admin",
         name: "Admin Pengelola UMKM",
+        email: "admin@korowelangkulon.desa.id",
+        password_hash: adminPassword,
+        role: "ADMIN",
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: "usr-superadmin-kutoharjo",
+        name: "Super Admin Desa Kutoharjo",
+        email: "superadmin@kutoharjo.desa.id",
+        password_hash: superAdminPassword,
+        role: "SUPERADMIN",
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: "usr-admin-kutoharjo",
+        name: "Admin Kutoharjo",
         email: "admin@kutoharjo.desa.id",
         password_hash: adminPassword,
         role: "ADMIN",
@@ -42,6 +58,7 @@ function getInitialData() {
     ],
     umkms: [],
     products: [],
+    reviews: [],
   };
 }
 
@@ -53,7 +70,9 @@ function loadData() {
   }
   try {
     const raw = fs.readFileSync(DATA_FILE, "utf-8");
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    if (!parsed.reviews) parsed.reviews = [];
+    return parsed;
   } catch (err) {
     console.error("Error loading local data file, re-initializing...", err);
     const initial = getInitialData();
@@ -149,19 +168,46 @@ async function executeLocalSql(strings, values) {
     return [{ key, value }];
   }
 
+  // REVIEWS Queries
+  if (/FROM reviews/i.test(q)) {
+    const umkmIdVal = values[0];
+    const filtered = (data.reviews || []).filter((r) => String(r.umkm_id) === String(umkmIdVal));
+    return filtered.map((r) => ({
+      ...r,
+      createdAt: r.created_at,
+    }));
+  }
+
+  if (/INSERT INTO reviews/i.test(q)) {
+    const [id, umkm_id, name, rating, comment] = values;
+    const newRev = {
+      id: id || "rev-" + crypto.randomBytes(6).toString("hex"),
+      umkm_id,
+      name,
+      rating: Number(rating),
+      comment,
+      created_at: new Date().toISOString(),
+    };
+    if (!data.reviews) data.reviews = [];
+    data.reviews.unshift(newRev);
+    saveData(data);
+    return [{
+      ...newRev,
+      createdAt: newRev.created_at,
+    }];
+  }
+
   // 5. UMKMS Queries
   if (/FROM umkms/i.test(q)) {
     let filtered = [...data.umkms];
 
-    // Filter search, category, dusun
     if (/WHERE u\.slug =/i.test(q) || /WHERE slug =/i.test(q)) {
       const slugVal = values[0];
-      filtered = filtered.filter((u) => u.slug === slugVal);
+      filtered = filtered.filter((u) => u.slug === slugVal || String(u.id) === String(slugVal));
     } else if (/WHERE id =/i.test(q) || /WHERE u\.id =/i.test(q)) {
       const idVal = values[0];
-      filtered = filtered.filter((u) => u.id === idVal);
+      filtered = filtered.filter((u) => String(u.id) === String(idVal));
     } else {
-      // Filter is_verified
       if (/u\.is_verified = TRUE/i.test(q) || /is_verified = TRUE/i.test(q)) {
         filtered = filtered.filter((u) => u.is_verified === true);
       } else if (/u\.is_verified = FALSE/i.test(q) || /is_verified = FALSE/i.test(q)) {
@@ -173,7 +219,6 @@ async function executeLocalSql(strings, values) {
       return [{ total: filtered.length, count: filtered.length }];
     }
 
-    // Attach category and formatting
     const formatted = filtered.map((u) => {
       const cat = data.categories.find((c) => c.id === u.category_id);
       return {
@@ -187,6 +232,9 @@ async function executeLocalSql(strings, values) {
         instagramUrl: u.instagram_url,
         imageUrl: u.image_url,
         isVerified: u.is_verified,
+        certifications: u.certifications || [],
+        rating: u.rating || "0.00",
+        reviewCount: u.review_count || 0,
         createdAt: u.created_at,
         updatedAt: u.updated_at,
         cat_id: cat?.id || null,
@@ -234,7 +282,7 @@ async function executeLocalSql(strings, values) {
   if (/UPDATE umkms/i.test(q)) {
     if (/is_verified = TRUE/i.test(q) && /WHERE id =/i.test(q)) {
       const idVal = values[0];
-      const target = data.umkms.find((u) => u.id === idVal);
+      const target = data.umkms.find((u) => String(u.id) === String(idVal));
       if (target) {
         target.is_verified = true;
         target.updated_at = new Date().toISOString();
@@ -244,40 +292,25 @@ async function executeLocalSql(strings, values) {
       return [];
     }
 
-    if (/WHERE slug =/i.test(q)) {
+    if (/WHERE slug =/i.test(q) || /WHERE id =/i.test(q)) {
       const slugVal = values[values.length - 1];
-      const target = data.umkms.find((u) => u.slug === slugVal);
+      const target = data.umkms.find((u) => u.slug === slugVal || String(u.id) === String(slugVal));
       if (target) {
-        const [
-          name, owner_name, description, address, dusun, operational_hours,
-          whatsapp_number, maps_url, instagram_url, image_url, category_id, is_verified
-        ] = values;
-
-        if (name) target.name = name;
-        if (owner_name) target.owner_name = owner_name;
-        if (description) target.description = description;
-        if (address) target.address = address;
-        if (dusun) target.dusun = dusun;
-        target.operational_hours = operational_hours || target.operational_hours;
-        if (whatsapp_number) target.whatsapp_number = whatsapp_number;
-        target.maps_url = maps_url || target.maps_url;
-        target.instagram_url = instagram_url || target.instagram_url;
-        if (image_url) target.image_url = image_url;
-        if (category_id) target.category_id = category_id;
-        if (is_verified !== null && is_verified !== undefined) target.is_verified = is_verified;
         target.updated_at = new Date().toISOString();
         saveData(data);
         return [target];
       }
       return [];
     }
+
+    return [];
   }
 
   if (/DELETE FROM umkms/i.test(q)) {
     const val = values[0];
     const initialLen = data.umkms.length;
-    data.umkms = data.umkms.filter((u) => u.slug !== val && u.id !== val);
-    data.products = data.products.filter((p) => p.umkm_id !== val);
+    data.umkms = data.umkms.filter((u) => u.slug !== val && String(u.id) !== String(val));
+    data.products = data.products.filter((p) => String(p.umkm_id) !== String(val));
     saveData(data);
     return [{ success: data.umkms.length < initialLen }];
   }
@@ -288,9 +321,9 @@ async function executeLocalSql(strings, values) {
     let prods = [...data.products];
 
     if (/WHERE umkm_id =/i.test(q)) {
-      prods = prods.filter((p) => p.umkm_id === umkmIdVal);
+      prods = prods.filter((p) => String(p.umkm_id) === String(umkmIdVal));
     } else if (/WHERE id =/i.test(q)) {
-      prods = prods.filter((p) => p.id === umkmIdVal);
+      prods = prods.filter((p) => String(p.id) === String(umkmIdVal));
     }
 
     return prods.map((p) => ({
@@ -324,7 +357,7 @@ async function executeLocalSql(strings, values) {
 
   if (/DELETE FROM products/i.test(q)) {
     const idVal = values[0];
-    data.products = data.products.filter((p) => p.id !== idVal);
+    data.products = data.products.filter((p) => String(p.id) !== String(idVal));
     saveData(data);
     return [{ success: true }];
   }

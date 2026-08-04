@@ -1,15 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
-const { z } = require("zod");
 const { authMiddleware, requireRole } = require("../middleware/auth");
-
-const createAdminSchema = z.object({
-  name: z.string().min(3),
-  email: z.string().email(),
-  password: z.string().min(6),
-});
+const { hashPassword } = require("../src/utils/password");
+const validate = require("../src/middleware/validate");
+const { adminSchema } = require("../src/validators/schemas");
 
 module.exports = function (sql) {
   // GET /api/superadmin/admins
@@ -17,7 +12,7 @@ module.exports = function (sql) {
     try {
       const admins = await sql`
         SELECT id, name, email, role, created_at AS "createdAt"
-        FROM users WHERE role = 'ADMIN'
+        FROM users WHERE role = 'ADMIN' OR role = 'admin'
         ORDER BY created_at DESC
       `;
       return res.json({ data: admins });
@@ -27,27 +22,22 @@ module.exports = function (sql) {
     }
   });
 
-  // POST /api/superadmin/admins
-  router.post("/admins", authMiddleware, requireRole("SUPERADMIN"), async (req, res) => {
+  // POST /api/superadmin/admins with Argon2 hashing
+  router.post("/admins", authMiddleware, requireRole("SUPERADMIN"), validate(adminSchema), async (req, res) => {
     try {
-      const parsed = createAdminSchema.safeParse(req.body);
-      if (!parsed.success) {
-        return res.status(400).json({ error: parsed.error.flatten() });
-      }
-
-      const { name, email, password } = parsed.data;
+      const { name, email, password, role } = req.body;
 
       const existing = await sql`SELECT id FROM users WHERE email = ${email}`;
       if (existing && existing.length > 0) {
         return res.status(400).json({ error: "Email sudah digunakan" });
       }
 
-      const passwordHash = await bcrypt.hash(password, 10);
+      const passwordHash = await hashPassword(password || "admin123");
       const id = "usr-" + crypto.randomBytes(8).toString("hex");
 
       const inserted = await sql`
         INSERT INTO users (id, name, email, password_hash, role)
-        VALUES (${id}, ${name}, ${email}, ${passwordHash}, 'ADMIN')
+        VALUES (${id}, ${name}, ${email}, ${passwordHash}, ${role ? role.toUpperCase() : 'ADMIN'})
         RETURNING id, name, email, role
       `;
 

@@ -1,25 +1,26 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { authMiddleware } = require("../middleware/auth");
+const { verifyPassword } = require("../src/utils/password");
+const validate = require("../src/middleware/validate");
+const { loginSchema } = require("../src/validators/schemas");
 
 module.exports = function (sql) {
-  // POST /api/auth/login
-  router.post("/login", async (req, res) => {
+  // POST /api/auth/login with Zod validation and Argon2 verifyPassword
+  router.post("/login", validate(loginSchema), async (req, res) => {
     try {
       const { email, password } = req.body;
-      if (!email || !password) {
-        return res.status(400).json({ error: "Email dan kata sandi wajib diisi" });
-      }
 
-      const users = await sql`SELECT id, name, email, password_hash, profile_image, role FROM users WHERE email = ${email}`;
+      const users = await sql`SELECT id, name, email, password_hash, password, profile_image, role FROM users WHERE email = ${email}`;
       if (!users || users.length === 0) {
         return res.status(400).json({ error: "Email tidak terdaftar" });
       }
 
       const user = users[0];
-      const isPasswordValid = await bcrypt.compare(password, user.password_hash);
+      const hashToVerify = user.password_hash || user.password;
+      const isPasswordValid = await verifyPassword(hashToVerify, password);
+      
       if (!isPasswordValid) {
         return res.status(400).json({ error: "Kata sandi salah" });
       }

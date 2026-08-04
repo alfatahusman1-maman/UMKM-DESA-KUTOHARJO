@@ -1,5 +1,5 @@
-import { fetchAdminStats } from "@/lib/api";
-import { Store, CheckCircle, Clock, Users, ArrowRight } from "lucide-react";
+import { fetchAdminStats, getExportUrl } from "@/lib/api";
+import { Store, CheckCircle, Clock, Users, ArrowRight, Download } from "lucide-react";
 import Link from "next/link";
 
 export default async function AdminDashboard() {
@@ -14,6 +14,46 @@ export default async function AdminDashboard() {
 
   return (
     <div className="space-y-6">
+      {/* Fitur 5: Excel Export Action Bar */}
+      <div className="bg-white border border-slate-200 rounded-lg p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-2xs">
+        <div>
+          <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+            <Download size={16} className="text-emerald-600" />
+            <span>Ekspor Rekap Laporan (.xlsx)</span>
+          </h2>
+          <p className="text-xs text-slate-500 mt-0.5">Unduh data UMKM, Katalog Produk, atau Masukan ke format file Excel.</p>
+        </div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <a
+            href={getExportUrl("umkm")}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-md text-xs font-semibold shadow-2xs transition-colors"
+          >
+            <Download size={14} />
+            <span>Export UMKM</span>
+          </a>
+          <a
+            href={getExportUrl("produk")}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 bg-sky-600 hover:bg-sky-700 text-white px-3 py-1.5 rounded-md text-xs font-semibold shadow-2xs transition-colors"
+          >
+            <Download size={14} />
+            <span>Export Produk</span>
+          </a>
+          <a
+            href={getExportUrl("feedback")}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 bg-slate-700 hover:bg-slate-800 text-white px-3 py-1.5 rounded-md text-xs font-semibold shadow-2xs transition-colors"
+          >
+            <Download size={14} />
+            <span>Export Masukan</span>
+          </a>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {statCards.map((stat, idx) => (
           <div key={idx} className={`p-6 rounded-lg ${stat.bg} flex flex-col justify-between h-28`}>
@@ -77,4 +117,3 @@ export default async function AdminDashboard() {
     </div>
   );
 }
-

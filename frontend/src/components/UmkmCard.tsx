@@ -12,6 +12,10 @@ export default function UmkmCard({ umkm }: { umkm: Umkm }) {
   const categoryName = umkm?.category?.name || "UMKM";
   const isKuliner = categoryName.toLowerCase().includes("kuliner");
   const imageUrl = umkm?.imageUrl || "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=800";
+  const certifications = umkm?.certifications && umkm.certifications.length > 0
+    ? umkm.certifications
+    : (isKuliner ? ["Halal MUI"] : []);
+  const ratingVal = umkm?.rating ? Number(umkm.rating).toFixed(1) : "5.0";
 
   return (
     <>
@@ -27,19 +31,31 @@ export default function UmkmCard({ umkm }: { umkm: Umkm }) {
           <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-slate-900 px-2.5 py-1 rounded-md text-[11px] font-bold shadow-2xs border border-slate-200/50">
             {categoryName}
           </span>
-          {isKuliner && (
-            <span className="absolute top-3 right-3 bg-emerald-600 text-white px-2.5 py-0.5 rounded-full shadow-2xs flex items-center gap-1 text-[10px] font-semibold" title="Sertifikasi Halal">
-              <span className="material-symbols-outlined text-[13px]">verified</span>
-              <span>Sertifikasi Halal</span>
-            </span>
-          )}
+          <div className="absolute top-3 right-3 flex flex-col items-end gap-1">
+            {certifications.slice(0, 2).map((cert, idx) => (
+              <span
+                key={idx}
+                className="bg-emerald-600 text-white px-2 py-0.5 rounded-full shadow-2xs flex items-center gap-1 text-[10px] font-semibold"
+                title={cert}
+              >
+                <span className="material-symbols-outlined text-[12px]">verified</span>
+                <span>{cert}</span>
+              </span>
+            ))}
+          </div>
         </div>
 
         <div className="p-4 flex flex-col flex-1 justify-between space-y-3">
           <div>
-            <h4 className="font-bold text-slate-900 text-sm tracking-tight mb-1 line-clamp-1 group-hover:text-slate-700 transition-colors">
-              {umkm?.name || "Nama UMKM"}
-            </h4>
+            <div className="flex items-center justify-between gap-1 mb-1">
+              <h4 className="font-bold text-slate-900 text-sm tracking-tight line-clamp-1 group-hover:text-slate-700 transition-colors">
+                {umkm?.name || "Nama UMKM"}
+              </h4>
+              <div className="flex items-center gap-1 text-[11px] font-bold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-sm shrink-0">
+                <span className="text-amber-500">★</span>
+                <span>{ratingVal}</span>
+              </div>
+            </div>
             <p className="text-slate-500 text-xs line-clamp-2 leading-relaxed">
               {umkm?.description || ""}
             </p>

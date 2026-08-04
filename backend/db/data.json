@@ -2,8 +2,8 @@
   "users": [
     {
       "id": "usr-superadmin",
-      "name": "Super Admin Desa",
-      "email": "superadmin@kutoharjo.desa.id",
+      "name": "Super Admin Desa Korowelang",
+      "email": "superadmin@korowelangkulon.desa.id",
       "password_hash": "$2a$10$hepNUIUmzIdahZ4MR6jK3.WvgADm3fVJQ9R58Qw9u.uv7CX0lnR3.",
       "role": "SUPERADMIN",
       "created_at": "2026-08-03T03:26:54.491Z"
@@ -11,6 +11,22 @@
     {
       "id": "usr-admin",
       "name": "Admin Pengelola UMKM",
+      "email": "admin@korowelangkulon.desa.id",
+      "password_hash": "$2a$10$UGG3VYsFEVtxlxOjPzvvK.1NL9Gtcl1/6xtBsEgpRJybePNKYLnue",
+      "role": "ADMIN",
+      "created_at": "2026-08-03T03:26:54.491Z"
+    },
+    {
+      "id": "usr-superadmin-kutoharjo",
+      "name": "Super Admin Desa Kutoharjo",
+      "email": "superadmin@kutoharjo.desa.id",
+      "password_hash": "$2a$10$hepNUIUmzIdahZ4MR6jK3.WvgADm3fVJQ9R58Qw9u.uv7CX0lnR3.",
+      "role": "SUPERADMIN",
+      "created_at": "2026-08-03T03:26:54.491Z"
+    },
+    {
+      "id": "usr-admin-kutoharjo",
+      "name": "Admin Kutoharjo",
       "email": "admin@kutoharjo.desa.id",
       "password_hash": "$2a$10$UGG3VYsFEVtxlxOjPzvvK.1NL9Gtcl1/6xtBsEgpRJybePNKYLnue",
       "role": "ADMIN",
@@ -67,5 +83,15 @@
     }
   ],
   "umkms": [],
-  "products": []
+  "products": [],
+  "reviews": [
+    {
+      "id": "rev-cf17c41adff5",
+      "umkm_id": "1",
+      "name": "Pengunjung Tes QA",
+      "rating": 5,
+      "comment": "Produk UMKM ini sangat luar biasa dan direkomendasikan!",
+      "created_at": "2026-08-04T11:15:52.812Z"
+    }
+  ]
 }
