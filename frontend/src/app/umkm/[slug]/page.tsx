@@ -17,12 +17,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const umkm = await fetchUmkmBySlug(params.slug);
   if (!umkm) {
     return {
-      title: "UMKM Tidak Ditemukan - Portal UMKM Korowelang Kulon",
+      title: "UMKM Tidak Ditemukan - Portal UMKM Kutoharjo",
     };
   }
 
-  const title = `${umkm.name} - UMKM Desa Korowelang Kulon`;
-  const description = `${umkm.description || "Profil & Produk UMKM Desa Korowelang Kulon, Cepiring, Kendal."} Pemilik: ${umkm.ownerName}, Dusun ${umkm.dusun}.`;
+  const title = `${umkm.name} - UMKM Desa Kutoharjo`;
+  const description = `${umkm.description || "Profil & Produk UMKM Desa Kutoharjo, Kendal."} Pemilik: ${umkm.ownerName}, Dusun ${umkm.dusun}.`;
   const imageUrl = umkm.imageUrl || "/og-default.jpg";
 
   return {
@@ -31,8 +31,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       title,
       description,
-      url: `https://umkm-korowelang.vercel.app/umkm/${umkm.slug}`,
-      siteName: "Portal UMKM Desa Korowelang Kulon",
+      url: `https://umkm-kutoharjo.vercel.app/umkm/${umkm.slug}`,
+      siteName: "Portal UMKM Desa Kutoharjo",
       images: [
         {
           url: imageUrl,
@@ -61,7 +61,7 @@ export default async function DetailUmkmPage({ params }: PageProps) {
 
   if (!umkm) notFound();
 
-  const navbarTitle = settings.navbar_title || settings.site_name || "Korowelang Hub";
+  const navbarTitle = settings.navbar_title || settings.site_name || "Kutoharjo Hub";
   const siteLogo = settings.site_logo || undefined;
   const footerBio = settings.footer_bio || undefined;
   const footerCopyright = settings.footer_copyright || undefined;

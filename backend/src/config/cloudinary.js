@@ -12,7 +12,7 @@ cloudinary.config({
  * @param {string} folder 
  * @returns {Promise<string>} Image URL
  */
-const uploadToCloudinary = (fileBuffer, folder = "umkm-korowelang") => {
+const uploadToCloudinary = (fileBuffer, folder = "umkm-kutoharjo") => {
   return new Promise((resolve, reject) => {
     // If cloudinary credentials aren't set, return mock or base64 data-uri for dev
     if (!process.env.CLOUDINARY_CLOUD_NAME || process.env.CLOUDINARY_CLOUD_NAME === "demo") {

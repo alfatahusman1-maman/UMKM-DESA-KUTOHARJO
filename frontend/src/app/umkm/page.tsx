@@ -50,7 +50,7 @@ export default async function DaftarUmkmPage({ searchParams }: PageProps) {
       minPrice,
       maxPrice,
       page,
-      limit: 6, // 6 UMKM per page as requested in plan
+      limit: 6,
     }),
     fetchSiteSettings(),
   ]);
@@ -58,7 +58,7 @@ export default async function DaftarUmkmPage({ searchParams }: PageProps) {
   const items = Array.isArray(umkmsRes.data) ? umkmsRes.data : [];
   const meta = umkmsRes.meta || { total: items.length, totalPages: 1, page: 1 };
 
-  const navbarTitle = settings.navbar_title || "Portal UMKM Korowelang";
+  const navbarTitle = settings.navbar_title || "Portal UMKM Kutoharjo";
   const siteLogo = settings.site_logo || undefined;
   const footerBio = settings.footer_bio || undefined;
   const footerCopyright = settings.footer_copyright || undefined;
@@ -81,7 +81,7 @@ export default async function DaftarUmkmPage({ searchParams }: PageProps) {
             <div>
               <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Katalog UMKM Desa</h1>
               <p className="text-xs text-slate-500 mt-1">
-                Menampilkan <span className="font-semibold text-slate-900">{meta.total}</span> UMKM terverifikasi di Korowelang Kulon & Kutoharjo.
+                Menampilkan <span className="font-semibold text-slate-900">{meta.total}</span> UMKM terverifikasi di Desa Kutoharjo.
               </p>
             </div>
           </div>

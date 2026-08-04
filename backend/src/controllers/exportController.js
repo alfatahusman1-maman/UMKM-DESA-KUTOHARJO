@@ -59,7 +59,7 @@ const exportUmkm = async (req, res) => {
     });
 
     res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-    res.setHeader("Content-Disposition", `attachment; filename=Rekap_UMKM_Korowelang_${Date.now()}.xlsx`);
+    res.setHeader("Content-Disposition", `attachment; filename=Rekap_UMKM_Kutoharjo_${Date.now()}.xlsx`);
 
     await workbook.xlsx.write(res);
     res.end();
@@ -109,7 +109,7 @@ const exportProducts = async (req, res) => {
     worksheet.getColumn("price").numFmt = '"Rp"#,##0.00';
 
     res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-    res.setHeader("Content-Disposition", `attachment; filename=Rekap_Produk_Korowelang_${Date.now()}.xlsx`);
+    res.setHeader("Content-Disposition", `attachment; filename=Rekap_Produk_Kutoharjo_${Date.now()}.xlsx`);
 
     await workbook.xlsx.write(res);
     res.end();

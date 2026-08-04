@@ -10,10 +10,10 @@ export async function fetchSiteSettings() {
     return json.data || {};
   } catch (err) {
     return {
-      navbar_title: "Portal UMKM Korowelang",
-      site_name: "Portal UMKM Desa Korowelang Kulon",
-      hero_title: "Temukan & Dukung UMKM Lokal Korowelang Kulon",
-      hero_subtitle: "Direktori digital yang menghubungkan Anda langsung dengan pelaku usaha mikro, kecil, dan menengah di Desa Korowelang Kulon.",
+      navbar_title: "Portal UMKM Kutoharjo",
+      site_name: "Portal UMKM Desa Kutoharjo",
+      hero_title: "Temukan & Dukung UMKM Lokal Kutoharjo",
+      hero_subtitle: "Direktori digital yang menghubungkan Anda langsung dengan pelaku usaha mikro, kecil, dan menengah di Desa Kutoharjo.",
     };
   }
 }

@@ -59,13 +59,13 @@ app.get("/", async (req, res) => {
     const { version } = result[0] || {};
     res.json({
       status: "online",
-      message: "Portal UMKM Korowelang Kulon / Kutoharjo API Server",
+      message: "Portal UMKM Kutoharjo API Server",
       databaseVersion: version || "Unknown",
     });
   } catch (err) {
     res.json({
       status: "online",
-      message: "Portal UMKM Korowelang Kulon / Kutoharjo API Server",
+      message: "Portal UMKM Kutoharjo API Server",
       databaseError: err.message,
     });
   }

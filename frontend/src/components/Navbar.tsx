@@ -12,7 +12,7 @@ const NAV_LINKS = [
   { label: "Kontak", href: "/kontak" },
 ];
 
-export default function Navbar({ title = "Portal UMKM Korowelang", logo }: { title?: string; logo?: string }) {
+export default function Navbar({ title = "Portal UMKM Kutoharjo", logo }: { title?: string; logo?: string }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 

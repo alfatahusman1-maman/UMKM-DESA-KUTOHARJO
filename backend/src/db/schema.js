@@ -61,7 +61,7 @@ const feedbacks = pgTable("feedbacks", {
 
 const siteSettings = pgTable("site_settings", {
   id: serial("id").primaryKey(),
-  navbarTitle: varchar("navbar_title", { length: 255 }).default("Portal UMKM Korowelang Kulon"),
+  navbarTitle: varchar("navbar_title", { length: 255 }).default("Portal UMKM Kutoharjo"),
   siteLogo: text("site_logo"),
   heroTitle: varchar("hero_title", { length: 255 }),
   heroSubtitle: text("hero_subtitle"),

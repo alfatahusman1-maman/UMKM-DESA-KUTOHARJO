@@ -43,7 +43,7 @@ export default function PetaDesaPage() {
     loadData();
   }, []);
 
-  // Default Centroid: Desa Korowelang Kulon / Kutoharjo, Cepiring, Kendal
+  // Default Centroid: Desa Kutoharjo, Kendal
   const centerLat = -6.8975;
   const centerLng = 110.1654;
 
@@ -70,7 +70,7 @@ export default function PetaDesaPage() {
       />
 
       <div>
-        <Navbar title={settings.navbar_title || "Portal UMKM Korowelang"} />
+        <Navbar title={settings.navbar_title || "Portal UMKM Kutoharjo"} />
 
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
           <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-2xs">
@@ -84,7 +84,7 @@ export default function PetaDesaPage() {
                   Peta Persebaran UMKM Desa
                 </h1>
                 <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                  Eksplorasi lokasi fisik usaha mikro dan produk unggulan warga Desa Korowelang Kulon & Kutoharjo secara visual.
+                  Eksplorasi lokasi fisik usaha mikro dan produk unggulan warga Desa Kutoharjo secara visual.
                 </p>
               </div>
               <div className="text-right shrink-0">
@@ -149,7 +149,7 @@ export default function PetaDesaPage() {
         </main>
       </div>
 
-      <Footer title={settings.navbar_title || "Portal UMKM Korowelang"} />
+      <Footer title={settings.navbar_title || "Portal UMKM Kutoharjo"} />
     </div>
   );
 }
