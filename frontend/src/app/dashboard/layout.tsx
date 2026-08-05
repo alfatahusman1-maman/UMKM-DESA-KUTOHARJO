@@ -22,7 +22,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-slate-50/50 flex flex-col">
-      <Navbar title={navbarTitle} logo={siteLogo} />
+      <Navbar title={navbarTitle} logo={siteLogo} hideNavLinks={true} />
       <div className="flex flex-1">
         <DashboardSidebar role={session.user.role} />
         <div className="flex-1 p-6 md:p-8 overflow-y-auto">
